@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NeuralBI — AI Data Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <!-- Background grid & noise -->
+    <div class="bg-grid"></div>
+    <div class="bg-orb orb1"></div>
+    <div class="bg-orb orb2"></div>
+
+    <div class="shell">
+
+      <!-- ── Sidebar ── -->
+      <aside class="sidebar">
+        <div class="logo">
+          <span class="logo-icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
+              <path d="M11 2L20 7V15L11 20L2 15V7L11 2Z" stroke="#00ffa3" stroke-width="1.5" fill="none"/>
+              <circle cx="11" cy="11" r="3" fill="#00ffa3"/>
+            </svg>
+          </span>
+          <span class="logo-text">TEAM <em>WAKANDA</em></span>
+        </div>
+
+        <nav>
+          <p class="nav-label">Main</p>
+          <ul>
+            <li class="active">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+              Dashboard
+            </li>
+            <li>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Dataset <br>( in future )
+            </li>
+          
+          </ul>
+
+          <p class="nav-label" style="margin-top:32px">Schema</p>
+          <div class="schema-pills">
+            <span class="pill pill-blue">monthly_income</span>
+            <span class="pill pill-green">gender</span>
+            <span class="pill pill-amber">city_tier</span>
+            <span class="pill pill-purple">avg_online_spend</span>
+            <span class="pill pill-teal">shopping_preference</span>
+            <span class="pill pill-blue">tech_savvy_score</span>
+            <span class="pill pill-green">brand_loyalty_score</span>
+            <span class="pill pill-amber">impulse_buying_score</span>
+          </div>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="status-dot"></div>
+          <span>DB Connected</span>
+        </div>
+      </aside>
+
+      <!-- ── Main ── -->
+      <main class="main">
+
+        <!-- Top bar -->
+        <header class="topbar">
+          <div class="topbar-left">
+            <h1>TalkToData — conversational BI</h1>
+            <span class="badge-live">
+              <span class="pulse"></span> LIVE
+            </span>
+          </div>
+          <div class="topbar-right">
+            <div class="stat-chip">
+              <span class="chip-label">Rows</span>
+              <span class="chip-val">24,832</span>
+            </div>
+            <div class="stat-chip">
+              <span class="chip-label">Columns</span>
+              <span class="chip-val">23</span>
+            </div>
+            <div class="avatar">WAKANDA</div>
+          </div>
+        </header>
+
+        <!-- Query bar -->
+        <div class="query-bar">
+          <div class="query-wrap">
+            <div class="query-icon">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00ffa3" stroke-width="2"><path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 1 1 7.072 0l-.548.547A3.374 3.374 0 0 0 14 18.469V19a2 2 0 1 1-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg>
+            </div>
+            <input id="input" type="text" placeholder="Ask anything — 'Show revenue by city tier' or 'Top 5 products by spend'…" autocomplete="off" />
+            <button onclick="process_start()" id="button">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              Run
+            </button>
+          </div>
+          <div class="quick-queries">
+            <span class="qchip" onclick="setQuery('income by shopping preference')">Income vs shopping type</span>
+            <span class="qchip" onclick="setQuery('Show average online spend vs store spend by city tier')">Average Online vs Store Spending</span>
+            <span class="qchip" onclick="setQuery('Count of customers by gender')">Count of customers by gender</span>
+            <span class="qchip" onclick="setQuery('give a bar graph ')">BAR GRAPH EXAMPLE</span>
+          </div>
+        </div>
+
+        <!-- Dashboard grid -->
+        <div class="grid">
+
+          <!-- SQL Card -->
+          <div class="card card-sql">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="card-dot dot-green"></span>
+                Generated SQL
+              </div>
+              <button class="icon-btn" id="copy-btn" onclick="copySQL()" title="Copy SQL">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+              </button>
+            </div>
+            <pre id="queryarea"><span class="sql-placeholder">-- Your query will appear here
+-- Try asking a question above</span></pre>
+          </div>
+
+          <!-- Chart Card -->
+          <div class="card card-chart">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="card-dot dot-blue"></span>
+                Visualization
+              </div>
+              <div class="chart-type-pills" id="chartTypePills" style="display:none">
+                <span class="ctype active" data-type="bar">Bar</span>
+                <span class="ctype" data-type="line">Line</span>
+                <span class="ctype" data-type="pie">Pie</span>
+              </div>
+            </div>
+            <div class="chart-placeholder" id="chartPlaceholder">
+              <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#ffffff18" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <p>Run a query to visualize data</p>
+            </div>
+            <div class="chart-wrap" id="chartWrap" style="display:none">
+              <canvas id="chart"></canvas>
+            </div>
+            <div id="dataTable" style="overflow-x:auto;padding:0 18px 18px;display:none"></div>
+            <!-- <div id="dataTable" style="overflow-x:auto;padding:0 18px 18px;display:none"></div> -->
+          </div>
+
+          <!-- <div id="dataTable" style="overflow-x:auto;padding:0 18px 18px;display:none"></div> -->
+          <!-- Stats row -->
+          <div class="card card-stats">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="card-dot dot-amber"></span>
+                Result Metrics
+              </div>
+            </div>
+            <div class="metrics-row" id="metricsRow">
+              <div class="metric">
+                <span class="metric-label">Rows Returned</span>
+                <span class="metric-val" id="m-rows">—</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Columns</span>
+                <span class="metric-val" id="m-cols">—</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Chart Type</span>
+                <span class="metric-val" id="m-type">—</span>
+              </div>
+              <div class="metric">
+                <span class="metric-label">Query Time</span>
+                <span class="metric-val" id="m-time">—</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- History Card -->
+          <div class="card card-history">
+            <div class="card-header">
+              <div class="card-title">
+                <span class="card-dot dot-purple"></span>
+                Query History
+              </div>
+            </div>
+            <ul class="history-list" id="historyList">
+              <li class="history-empty">No queries yet</li>
+            </ul>
+          </div>
+
+        </div>
+      </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+      // Quick query chips
+      function setQuery(q) {
+        document.getElementById("input").value = q;
+        document.getElementById("input").focus();
+      }
+
+      // Copy SQL
+      function copySQL() {
+        const text = document.getElementById("queryarea").innerText;
+        navigator.clipboard.writeText(text);
+        const btn = document.getElementById("copy-btn");
+        btn.style.color = "#00ffa3";
+        setTimeout(() => btn.style.color = "", 1500);
+      }
+
+      // Sidebar active state
+      document.querySelectorAll(".sidebar nav li").forEach(li => {
+        li.addEventListener("click", () => {
+          document.querySelectorAll(".sidebar nav li").forEach(x => x.classList.remove("active"));
+          li.classList.add("active");
+        });
+      });
+
+      // Chart type switcher (hooked into createSmartChart via window.chartInstance)
+      document.querySelectorAll(".ctype").forEach(btn => {
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".ctype").forEach(x => x.classList.remove("active"));
+          btn.classList.add("active");
+          document.getElementById("m-type").textContent = btn.dataset.type.toUpperCase();
+          // re-render if data exists
+          if (window._lastData) createSmartChart(window._lastData, btn.dataset.type);
+        });
+      });
+    </script>
+  </body>
+</html>
